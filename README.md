@@ -40,14 +40,34 @@ Ensure you have the following installed locally:
     npm install
     ```
 
-4. **Start the database (PostgreSQL) using Docker:**
+### 🏃 Running the Application
+You can choose between two development environments depending on your preference:
+
+Option A: Local App Development (Recommended)
+    Run PostgreSQL inside a Docker container while running the NestJS application directly on your host machine for faster iteration.
+
+
+1. **Start the database (PostgreSQL) using Docker:**
     ```bash
-    docker compose up -d
+    docker compose up -d db
     ```
 
-5. **Run the application in development mode:**
+2. **Run the application in development mode:**
     ```bash
     npm run start:dev
+    ```
+
+Option B: Fully Dockerized Development (with Hot-Reloading)    
+
+Run both PostgreSQL and the NestJS application fully containerized within Docker, with code changes automatically hot-reloaded.
+
+1. **Start all services in hot-reloading mode:**
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+    ```
+2. **Stop the containerized environment:**
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml down
     ```
 
 ### 🌿 Gitflow Strategy
