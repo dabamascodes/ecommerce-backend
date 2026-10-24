@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce_backend_dev
+    command: sh -c "npm install --include=dev && npm run start:dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      STAGE: ${STAGE}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME}
+      PORT: ${PORT}
+    depends_on:
+      - db
+    networks:
+      - ecommerce_network
+
+networks:
+  ecommerce_network:
+    driver: bridge

@@ -1,10 +1,39 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { EnvConfiguration, JoiValidationSchema  } from './common/config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [EnvConfiguration],
+      validationSchema: JoiValidationSchema,
+    }),
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const db = configService.getOrThrow('database');
+
+        return {
+          type: 'postgres',
+          host: db.host,
+          port: db.port,
+          username: db.username,
+          password: db.password,
+          database: db.name,
+          autoLoadEntities: true,
+          synchronize: db.synchronize,
+          logging: db.logging,
+          ssl: db.ssl,
+        };
+      },
+    }),
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
