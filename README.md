@@ -69,6 +69,19 @@ Run both PostgreSQL and the NestJS application fully containerized within Docker
     ```bash
     docker compose -f docker-compose.yml -f docker-compose.dev.yml down
     ```
+### 💡 Troubleshooting
+
+#### Permission issues in `dist/` when switching environments
+If you switch from a fully containerized execution (Option B) back to local development (Option A) and encounter an `EACCES: permission denied` error when running `npm run start:dev`, it is because Docker created the build artifacts inside `dist/` under root permissions.
+
+To resolve this, clean or reclaim ownership of the build directory:
+
+```bash
+sudo rm -rf dist
+# or
+sudo chown -R $USER:$USER dist
+```
+
 
 ### 🌿 Gitflow Strategy
 Project development follows a strict branching model:
