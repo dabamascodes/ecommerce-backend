@@ -1,50 +1,50 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Address } from '../../addresses/entities/address.entity';
 
 @Entity('users')
 export class User {
 
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id!: string;
 
   @Column('text', {
     unique: true,
   })
-  email?: string;
+  email!: string;
 
   @Column('text', {
     select: false,
   })
-  password?: string;
+  password!: string;
 
   @Column('text')
-  name?: string;
+  name!: string;
 
   @Column('text')
-  lastName?: string;
+  lastName!: string;
+
+  @Column('text')
+  phone!: string;
 
   @Column('bool', {
     default: true,
   })
-  isActive?: boolean;
+  isActive!: boolean;
 
   @Column('text', {
     array: true,
     default: ['user']
   })
-  roles?: string[];
+  roles!: string[];
 
-  // Nota: Aquí agregaremos las relaciones con UserAddresses y Orders conforme avancemos en esos módulos
-  // @OneToMany(() => UserAddress, (userAddress) => userAddress.user)
-  // addresses: UserAddress[];
-
-  // @OneToMany(() => Order, (order) => order.user)
-  // orders: Order[];
+  @OneToMany(() => Address, (address) => address.user)
+  addresses!: Address[];
 
   @CreateDateColumn()
-  createdAt?: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt?: Date;
+  updatedAt!: Date;
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

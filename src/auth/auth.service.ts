@@ -51,6 +51,7 @@ export class AuthService {
         password: true, 
         name: true, 
         lastName: true, 
+        phone: true,
         isActive: true, 
         roles: true 
       }

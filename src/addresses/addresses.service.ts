@@ -53,7 +53,7 @@ export class AddressesService {
   async findOne(id: string, user: User) {
     const address = await this.addressRepository.findOne({
       where: { id },
-      relations: ['user'],
+      relations: {user: true},
     });
 
     if (!address || !address.isActive) {

@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
+import { 
+  IsBoolean, 
+  IsOptional, 
+  IsString, 
+  MaxLength, 
+  MinLength, 
+  Matches 
+} from 'class-validator';
 
 export class CreateAddressDto {
   @ApiProperty({
@@ -8,7 +15,8 @@ export class CreateAddressDto {
     minLength: 3,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(3, { message: 'Street must be at least 3 characters long' })
+  @MaxLength(100)
   street!: string;
 
   @ApiProperty({
@@ -16,6 +24,11 @@ export class CreateAddressDto {
     example: '1540',
   })
   @IsString()
+  @MinLength(1, { message: 'Exterior number is required' })
+  @MaxLength(10, { message: 'Exterior number cannot exceed 10 characters' })
+  @Matches(/^[a-zA-Z0-9#\-\s]+$/, {
+    message: 'Exterior number must contain only valid alphanumeric characters',
+  })
   exteriorNumber!: string;
 
   @ApiProperty({
@@ -25,6 +38,10 @@ export class CreateAddressDto {
   })
   @IsString()
   @IsOptional()
+  @MaxLength(20, { message: 'Interior number cannot exceed 20 characters' })
+  @Matches(/^[a-zA-Z0-9#\-\s]+$/, {
+    message: 'Interior number must contain only valid alphanumeric characters',
+  })
   interiorNumber?: string;
 
   @ApiProperty({
@@ -33,7 +50,11 @@ export class CreateAddressDto {
     minLength: 2,
   })
   @IsString()
-  @MinLength(2)
+  @MinLength(2, { message: 'Neighborhood must be at least 2 characters long' })
+  @MaxLength(50)
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s.-]+$/, {
+    message: 'Neighborhood must contain only valid characters',
+  })
   neighborhood!: string;
 
   @ApiProperty({
@@ -42,7 +63,11 @@ export class CreateAddressDto {
     minLength: 2,
   })
   @IsString()
-  @MinLength(2)
+  @MinLength(2, { message: 'City must be at least 2 characters long' })
+  @MaxLength(50)
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.-]+$/, {
+    message: 'City must only contain valid alphabetic characters',
+  })
   city!: string;
 
   @ApiProperty({
@@ -51,7 +76,11 @@ export class CreateAddressDto {
     minLength: 2,
   })
   @IsString()
-  @MinLength(2)
+  @MinLength(2, { message: 'State must be at least 2 characters long' })
+  @MaxLength(50)
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.-]+$/, {
+    message: 'State must only contain valid alphabetic characters',
+  })
   state!: string;
 
   @ApiProperty({
@@ -60,7 +89,9 @@ export class CreateAddressDto {
     minLength: 3,
   })
   @IsString()
-  @MinLength(3)
+  @Matches(/^\d{5}$/, {
+    message: 'ZIP code must contain exactly 5 numeric digits',
+  })
   zipCode!: string;
 
   @ApiProperty({
@@ -69,7 +100,11 @@ export class CreateAddressDto {
     minLength: 2,
   })
   @IsString()
-  @MinLength(2)
+  @MinLength(2, { message: 'Country must be at least 2 characters long' })
+  @MaxLength(50)
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.-]+$/, {
+    message: 'Country must only contain valid alphabetic characters',
+  })
   country!: string;
 
   @ApiProperty({
@@ -78,7 +113,9 @@ export class CreateAddressDto {
     minLength: 7,
   })
   @IsString()
-  @MinLength(7)
+  @Matches(/^\+?[1-9]\d{6,14}$/, {
+    message: 'Phone number must follow a valid format (e.g., 9151234567 or +526561234567)',
+  })
   phone!: string;
 
   @ApiProperty({

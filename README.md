@@ -2,7 +2,8 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# Enterprise E-Commerce Backend (NestJS API)
+
+<h1 style="text-align:center;">Enterprise E-Commerce Backend (NestJS API)</h1>
 
 A robust, scalable, and production-ready backend system designed for e-commerce operations. Built with **NestJS**, **PostgreSQL**, and **TypeORM**, following clean architecture principles, strict ACID database transactions, and professional development workflows.
 
@@ -34,6 +35,11 @@ Ensure you have the following installed locally:
     ```bash
     cp .env.template .env
     ```
+    Open the generated `.env` file and configure your credentials (e.g., database password and secret keys):
+    ```env
+    DB_PASSWORD=my_secure_db_password
+    JWT_SECRET=super_secret_jwt_key_for_production_and_dev
+    ```
 
 3. **Install dependencies:**
    ```bash
@@ -43,9 +49,8 @@ Ensure you have the following installed locally:
 ### 🏃 Running the Application
 You can choose between two development environments depending on your preference:
 
-Option A: Local App Development (Recommended)
-    Run PostgreSQL inside a Docker container while running the NestJS application directly on your host machine for faster iteration.
-
+#### Option A: Local App Development (Recommended)
+Run PostgreSQL inside a Docker container while running the NestJS application directly on your host machine for faster iteration.
 
 1. **Start the database (PostgreSQL) using Docker:**
     ```bash
@@ -57,8 +62,18 @@ Option A: Local App Development (Recommended)
     npm run start:dev
     ```
 
-Option B: Fully Dockerized Development (with Hot-Reloading)    
+3. **How to stop Option A:**
+    - To stop the NestJS application running in your terminal, press **`Ctrl + C`**.
+    - To stop the PostgreSQL database container, run:
+      ```bash
+      docker compose stop db
+      ```
+    - *(Optional)* To completely stop and remove the database container and its network:
+      ```bash
+      docker compose down
+      ```
 
+#### Option B: Fully Dockerized Development (with Hot-Reloading)    
 Run both PostgreSQL and the NestJS application fully containerized within Docker, with code changes automatically hot-reloaded.
 
 1. **Start all services in hot-reloading mode:**
@@ -69,6 +84,7 @@ Run both PostgreSQL and the NestJS application fully containerized within Docker
     ```bash
     docker compose -f docker-compose.yml -f docker-compose.dev.yml down
     ```
+
 ### 💡 Troubleshooting
 
 #### Permission issues in `dist/` when switching environments
@@ -81,7 +97,6 @@ sudo rm -rf dist
 # or
 sudo chown -R $USER:$USER dist
 ```
-
 
 ### 🌿 Gitflow Strategy
 Project development follows a strict branching model:
