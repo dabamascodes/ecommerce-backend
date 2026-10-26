@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EnvConfiguration, JoiValidationSchema  } from './common/config';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -32,6 +35,12 @@ import { EnvConfiguration, JoiValidationSchema  } from './common/config';
         };
       },
     }),
+
+    AuthModule,
+
+    UsersModule,
+
+    AddressesModule,
   ],
   controllers: [],
   providers: [],
