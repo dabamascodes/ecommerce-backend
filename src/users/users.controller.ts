@@ -5,6 +5,7 @@ import {
   Patch,
   Body,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -13,6 +14,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { User } from './entities/user.entity';
 import { UpdateUserDto, UpdateUserRoleDto } from './dto';
+import { PaginationDto } from 'src/common/dtos';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -44,12 +46,12 @@ export class UsersController {
 
   @Get()
   @Auth(ValidRoles.admin)
-  @ApiOperation({ summary: 'Admin: Get all users in the system with their addresses' })
+  @ApiOperation({ summary: 'Admin: Get all users in the system with their addresses with pagination' })
   @ApiResponse({ status: 200, description: 'List of users retrieved successfully', type: [User] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden (Admin role required)' })
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.usersService.findAll(paginationDto);
   }
 
   @Get(':id')

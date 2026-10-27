@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Address } from './entities/address.entity';
 import { CreateAddressDto, UpdateAddressDto } from './dto';
+import { PaginationDto } from 'src/common/dtos';
 import { User } from '../users/entities/user.entity';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 
@@ -40,8 +41,12 @@ export class AddressesService {
     });
   }
 
-  async findAllByUserId(userId: string) {
+  async findAllByUserId(userId: string, paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
     return await this.addressRepository.find({
+      take: limit,
+      skip: offset,
       where: { 
         user: { id: userId }, 
         isActive: true 
