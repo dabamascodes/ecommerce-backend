@@ -14,6 +14,8 @@ lerna-debug.log*
 
 # OS
 .DS_Store
+Thumbs.db
+ehthumbs.db
 
 # Tests
 /coverage
@@ -56,3 +58,4 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 /postgres
+uploads/
