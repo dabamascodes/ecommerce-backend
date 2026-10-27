@@ -6,6 +6,9 @@ import { EnvConfiguration, JoiValidationSchema  } from './common/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -41,6 +44,12 @@ import { AddressesModule } from './addresses/addresses.module';
     UsersModule,
 
     AddressesModule,
+
+    CategoriesModule,
+
+    ProductsModule,
+
+    SeedModule,
   ],
   controllers: [],
   providers: [],
