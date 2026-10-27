@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AddressesService } from './addresses.service';
@@ -16,6 +17,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../users/entities/user.entity';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { Address } from './entities/address.entity';
+import { PaginationDto } from 'src/common/dtos';
 
 @ApiTags('Addresses')
 @ApiBearerAuth()
@@ -46,12 +48,15 @@ export class AddressesController {
 
   @Get('user/:userId')
   @Auth(ValidRoles.admin)
-  @ApiOperation({ summary: 'Admin: Get all active addresses of a specific user by userId' })
+  @ApiOperation({ summary: 'Admin: Get all active addresses of a specific user by userId with pagination' })
   @ApiResponse({ status: 200, description: 'List of user addresses retrieved successfully', type: [Address] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden (Admin role required)' })
-  findAllByAdmin(@Param('userId', ParseUUIDPipe) userId: string) {
-    return this.addressesService.findAllByUserId(userId);
+  findAllByAdmin(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.addressesService.findAllByUserId(userId, paginationDto);
   }
 
   @Get(':id')

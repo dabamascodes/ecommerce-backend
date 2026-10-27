@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateUserDto, UpdateUserRoleDto } from './dto';
+import { PaginationDto } from 'src/common/dtos';
 
 import * as bcrypt from 'bcrypt';
 
@@ -52,8 +53,13 @@ export class UsersService {
     }
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
+
     return await this.userRepository.find({
+      take: limit,
+      skip: offset,
       relations: { addresses: true },
     });
   }
