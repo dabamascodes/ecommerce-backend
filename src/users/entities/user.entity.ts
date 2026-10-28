@@ -1,5 +1,6 @@
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Address } from '../../addresses/entities/address.entity';
+import { Order } from 'src/orders/entities';
 
 @Entity('users')
 export class User {
@@ -40,6 +41,9 @@ export class User {
   @OneToMany(() => Address, (address) => address.user)
   addresses!: Address[];
 
+  @OneToMany(() => Order, (order) => order.user)
+  orders!: Order[];
+
   @CreateDateColumn()
   createdAt!: Date;
 
@@ -55,4 +59,5 @@ export class User {
   checkFieldsBeforeUpdate() {
     this.checkFieldsBeforeInsert();
   }
+
 }
