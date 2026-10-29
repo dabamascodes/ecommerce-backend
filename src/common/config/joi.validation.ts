@@ -44,4 +44,22 @@ export const JoiValidationSchema = Joi.object({
     .pattern(/[a-z]/, 'lowercase letter')
     .pattern(/[0-9]/, 'number')
     .required(),
+
+  PAYMENT_PROVIDER: Joi.string()
+    .valid('stripe', 'mock')
+    .default('stripe'),
+
+  STRIPE_SECRET_KEY: Joi.string()
+    .when('PAYMENT_PROVIDER', {
+      is: 'stripe',
+      then: Joi.required(),
+      otherwise: Joi.optional().allow(''),
+    }),
+
+  STRIPE_WEBHOOK_SECRET: Joi.string()
+    .when('PAYMENT_PROVIDER', {
+      is: 'stripe',
+      then: Joi.required(),
+      otherwise: Joi.optional().allow(''),
+    }),
 });

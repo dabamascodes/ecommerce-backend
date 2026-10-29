@@ -147,6 +147,19 @@ export class OrdersService {
     return await this.orderRepository.save(order);
   }
 
+  async updatePaymentIntentId(id: string, paymentIntentId: string) {
+    const order = await this.findOneAdmin(id);
+
+    if (order.status !== OrderStatus.PENDING) {
+      throw new BadRequestException(
+        `Cannot update payment intent for order ${id} because its status is '${order.status}'`,
+      );
+    }
+
+    order.paymentIntentId = paymentIntentId;
+    return await this.orderRepository.save(order);
+  }
+
   async cancel(id: string, user: User) {
     const order = await this.findOne(id, user);
 
@@ -219,4 +232,18 @@ export class OrdersService {
 
     return order;
   }
+
+  async findByPaymentIntentId(paymentIntentId: string): Promise<Order | null> {
+    return await this.orderRepository.findOne({
+      where: { paymentIntentId },
+      relations: {
+        orderItems: {
+          product: true,
+        },
+        shippingAddress: true,
+        user: true,
+      },
+    });
+  }
 }
+
