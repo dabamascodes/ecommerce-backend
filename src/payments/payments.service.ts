@@ -29,10 +29,14 @@ export class PaymentsService {
     const amountInCents = Math.round(order.total * 100);
     const currency = 'usd';
 
+    const customerEmail = order.user?.email;
+    const customerName = order.user ? (order.user as any).name || order.user.email : undefined;
     const paymentData = await this.paymentProvider.createPaymentIntent(
       amountInCents,
       currency,
       { orderId: order.id },
+      customerEmail,
+      customerName,
     );
 
     await this.ordersService.updatePaymentIntentId(order.id, paymentData.paymentIntentId);
@@ -46,10 +50,7 @@ export class PaymentsService {
   }
 
   async verifyPaymentStatus(paymentIntentId: string, user: User) {
-    console.log('>>> Buscando paymentIntentId recibido:', paymentIntentId);
-    
     const order = await this.ordersService.findByPaymentIntentId(paymentIntentId);
-    console.log('>>> Resultado de la búsqueda:', order);
 
     if (!order) {
       throw new NotFoundException(`No order found with paymentIntentId: ${paymentIntentId}`);

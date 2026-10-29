@@ -7,6 +7,8 @@ export class MockPaymentService implements PaymentProvider {
     amount: number,
     currency: string,
     metadata: Record<string, any>,
+    customerEmail?: string,
+    customerName?: string,
   ) {
     const paymentIntentId = `pi_mock_${Date.now()}`;
     const clientSecret = `${paymentIntentId}_secret_mock`;

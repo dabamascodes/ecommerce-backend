@@ -16,11 +16,34 @@ export class StripePaymentService implements PaymentProvider {
     amount: number,
     currency: string,
     metadata: Record<string, any>,
+    customerEmail?: string,
+    customerName?: string,
   ) {
+    let customerId: string | undefined;
+
+    if (customerEmail) {
+      const existingCustomers = await this.stripe.customers.list({
+        email: customerEmail,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customerId = existingCustomers.data[0].id;
+      } else {
+        const newCustomer = await this.stripe.customers.create({
+          email: customerEmail,
+          name: customerName || 'Valued Customer',
+        });
+        customerId = newCustomer.id;
+      }
+    }
+
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount,
       currency,
       metadata,
+      customer: customerId,
+      receipt_email: customerEmail,
       automatic_payment_methods: { enabled: true },
     });
 

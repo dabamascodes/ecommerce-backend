@@ -204,6 +204,7 @@ export class OrdersService {
           product: true,
         },
         shippingAddress: true,
+        user: true,
       },
     });
 
