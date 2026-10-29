@@ -21,5 +21,11 @@ export const EnvConfiguration = () => {
       logging: !isProduction,
       ssl: isProduction,
     },
+
+    payments: {
+      provider: process.env.PAYMENT_PROVIDER || 'stripe',
+      stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    },
   };
 };

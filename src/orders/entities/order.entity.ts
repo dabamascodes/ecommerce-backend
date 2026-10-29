@@ -31,7 +31,7 @@ export class Order {
   status!: string; // pending, paid, shipped, delivered, cancelled
 
   @ApiProperty({ example: 'pi_3Mtw12LkdJz1Zu', description: 'Payment Intent ID from gateway', required: false })
-  @Column('varchar', { nullable: true })
+  @Column('varchar', { name: 'paymentIntentId', nullable: true })
   paymentIntentId!: string;
 
   @ManyToOne(() => User, (user) => user.orders, { eager: true, onDelete: 'RESTRICT' })
