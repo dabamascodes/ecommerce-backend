@@ -62,4 +62,8 @@ export const JoiValidationSchema = Joi.object({
       then: Joi.required(),
       otherwise: Joi.optional().allow(''),
     }),
+
+  ALLOWED_ORIGIN: Joi.string()
+    .uri({ scheme: ['http', 'https'] })
+    .default('http://localhost:5173'),
 });
