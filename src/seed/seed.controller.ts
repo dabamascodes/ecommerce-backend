@@ -21,13 +21,40 @@ import { Auth } from '../auth/decorators';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 
 @ApiTags('Seed')
-@ApiBearerAuth()
 @Controller('seed')
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
-  @Post('upload')
+  @Post('users')
+  @ApiOperation({
+    summary: 'Seed initial test users and default addresses',
+    description:
+      'Public endpoint to load predefined test users (Super Admin, Admin, Customer) along with their addresses from a local JSON file idempotently.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Users seeded successfully.',
+    schema: {
+      example: {
+        statusCode: 200,
+        message: 'Users seeded successfully',
+        usersInserted: 3,
+      },
+    },
+  })
+  async seedUsers() {
+    const result = await this.seedService.runUsersSeed();
+
+    return {
+      statusCode: 200,
+      message: 'Users seeded successfully',
+      ...result,
+    };
+  }
+
+  @Post('products')
   @Auth(ValidRoles.admin)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Upload a CSV file to seed database categories and products',
     description:
@@ -50,15 +77,6 @@ export class SeedController {
   @ApiResponse({
     status: 200,
     description: 'CSV processed and database seeded successfully.',
-    schema: {
-      example: {
-        statusCode: 200,
-        message: 'CSV file processed and database seeded successfully',
-        originalFileName: 'catalog.csv',
-        categoriesInserted: 5,
-        productsInserted: 42,
-      },
-    },
   })
   @ApiResponse({
     status: 400,
@@ -93,12 +111,12 @@ export class SeedController {
       },
     }),
   )
-  async uploadAndSeed(@UploadedFile() file: Express.Multer.File) {
+  async uploadProductsSeed(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('Please upload a valid CSV file.');
     }
 
-    const result = await this.seedService.runSeed(file.path);
+    const result = await this.seedService.runProductsSeed(file.path);
 
     return {
       statusCode: 200,
@@ -107,5 +125,4 @@ export class SeedController {
       ...result,
     };
   }
-
 }
