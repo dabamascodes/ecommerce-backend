@@ -8,13 +8,58 @@
 A robust, scalable, and production-ready backend system designed for e-commerce operations. Built with **NestJS**, **PostgreSQL**, and **TypeORM**, following clean architecture principles, strict ACID database transactions, and professional development workflows.
 
 ### 🚀 Tech Stack
-- **Framework:** NestJS (Node.js/TypeScript)
-- **Database:** PostgreSQL
-- **ORM:** TypeORM
-- **Containers:** Docker & Docker Compose
-- **Validation & Configuration:** `@nestjs/config`, Joi, `class-validator`, `class-transformer`
-- **Authentication & Security:** JWT, Passport, Bcrypt
-- **Version Control:** Git (Gitflow Workflow)
+* **Framework:** [NestJS](https://nestjs.com/) (TypeScript)
+* **Database & ORM:** PostgreSQL + [TypeORM](https://typeorm.io/)
+* **Authentication & Security:** Passport-JWT, Bcrypt, Role-Based Access Control (RBAC)
+* **Payments:** Stripe API Webhooks Integration
+* **API Documentation:** Swagger / OpenAPI
+
+## 📂 Architecture & Module Breakdown
+
+The application is structured into decoupled, domain-driven modules:
+
+### 1. 🔐 Auth Module (`/auth`)
+Handles authentication, authorization, and session management.
+* **Key Features:**
+  * User registration and login returning JWT Bearer tokens.
+  * Password hashing using **Bcrypt**.
+  * Dynamic Guards and Decorators (`@Auth()`, `@GetUser()`, `@RawHeaders()`) for route protection.
+  * Integration with Role-Based Access Control (RBAC).
+
+### 2. 👤 Users Module (`/users`)
+Manages user profiles, role hierarchy, and administrative controls.
+* **Roles:** `user`, `admin`, `super-user`.
+* **Key Features:**
+  * Profile management and administrative user listing.
+  * **Role Hierarchy Rules:** Users with the **`super-user`** role hold top-tier privileges, including the exclusive capability to activate or deactivate `admin` accounts.
+
+### 3. 📍 Addresses Module (`/addresses`)
+Manages physical shipping and billing locations linked relationally to users.
+* **Key Features:**
+  * Full CRUD operations for user addresses (`street`, `exteriorNumber`, `interiorNumber`, `neighborhood`, `city`, `state`, `zipCode`, `country`, `phone`).
+  * Default address flag management (`isDefault`) ensuring each user has a primary designated shipping destination.
+
+### 4. 📦 Products & Categories Module (`/products`)
+Core catalog management handling inventory, pricing, and classifications.
+* **Key Features:**
+  * CRUD endpoints for product management and categorization.
+  * Relational mapping between products, categories, and inventory stock.
+  * Paginated product listings and search filtering.
+
+### 5. 🛒 Orders & Order Items Module (`/orders`)
+Processes user purchasing workflows, order statuses, and transaction details.
+* **Key Features:**
+  * Transactional creation of orders linking user profiles, items, and calculated totals.
+  * Stock validation and automatic inventory adjustment upon order placement.
+  * Cascade management for order items and status tracking (`pending`, `paid`, `shipped`, `cancelled`).
+
+### 6. 💳 Payments Module (`/payments`)
+Handles checkout flows and third-party payment gateways.
+* **Key Features:**
+  * Integration with **Stripe Webhooks** for asynchronous payment verification.
+  * Customer mapping and webhook event listeners for order fulfillment.
+
+---
 
 ### 🛠️ Prerequisites
 Ensure you have the following installed locally:
@@ -104,7 +149,60 @@ Project development follows a strict branching model:
 - `develop`: Primary integration branch for development.
 - `feature/*`: Feature branches for new functionality.
 
+## 🌱 Database & Seeding System
 
+This project includes an automated database seeding system designed to populate the database from scratch in a clean, idempotent manner while maintaining strict relational foreign key integrity.
+
+### 1. Default Users, Roles, and Passwords
+The user seeding data file (`users-seed.data.json`) initializes key profiles with different access levels, development passwords, and registered addresses:
+
+| Name / User | Email | Dev Password | Assigned Roles | Description & Context |
+| :--- | :--- | :--- | :--- | :--- |
+| **Peter Parker** | `spiderman@ecommerce.test` | `Admin123!` | `user`, `admin`, `super-user` | Privileged user with elevated system capabilities. Has the exclusive power to activate and deactivate other admin accounts. Registered address in Forest Hills, NY. |
+| **Bruce Wayne** | `batman@ecommerce.test` | `Admin123!` | `user`, `admin` | Administrator profile focused on global store management, order operations and operational profile. Registered address in Gotham, NJ. |
+| **Tony Stark** | `ironman@ecommerce.test` | `Admin123!` | `user` | Standard e-commerce user profile for regular shopping flow validation. Registered address in Los Angeles, CA. |
+| **Clark Kent** | `superman@ecommerce.test` | `Admin123!` | `user` | Standard e-commerce user profile for regular shopping flow validation. Registered address in Metropolis, IL. |
+
+
+Each user is stored with their password securely hashed using **`bcrypt`** alongside an array of **`Address`** objects (street, exterior and interior numbers, neighborhood, city, state, zip code, country, and `isDefault` flag).
+
+---
+
+### 2. Execution Order & Workflow
+To maintain foreign key consistency and satisfy endpoint security rules, seeds must be executed in the following sequential order:
+
+1. **User and Address Seeder (`POST /seed/users`):**
+   * **Public / Initial:** Requires no prior authentication.
+   * **Prior Cleanup:** Performs a `TRUNCATE CASCADE` across dependent tables (`order_items` $\rightarrow$ `orders` $\rightarrow$ `addresses` $\rightarrow$ `users`), resetting identity sequences.
+   * **Result:** Seeds the default users and their relational addresses into the database.
+
+2. **Administrator Authentication (`POST /auth/login`):**
+   * **Prerequisite:** Once the user seed finishes, authenticate via the API using an account with an **`admin`** role (e.g., `batman@ecommerce.test` with password `Admin123!`).
+   * **JWT Token:** Copy the returned access token (`bearerToken`).
+
+3. **Products and Categories Seeder (`POST /seed/products`):**
+   * **Protected Endpoint:** Requires passing the `Authorization: Bearer <JWT_TOKEN>` header from your admin login.
+   * **Purpose:** Populates the product catalog and category structures to enable shopping cart, inventory, and order creation simulations.
+
+---
+
+### 3. Nest CLI Configuration (`nest-cli.json`)
+To ensure the build directory (`dist`) is wiped clean before each build and static JSON seed files are properly copied over, the project utilizes the following configuration:
+
+```json
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "assets": [
+      { "include": "seed/data/*.json", "outDir": "dist/seed" }
+    ],
+    "watchAssets": true
+  }
+}
+```
 
 # 💳 Payment & Webhooks Module (NestJS + PostgreSQL + Stripe, Mock & Hookdeck)
 
