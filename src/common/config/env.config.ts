@@ -27,5 +27,9 @@ export const EnvConfiguration = () => {
       stripeSecretKey: process.env.STRIPE_SECRET_KEY,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     },
+
+    cors: {
+      allowedOrigin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173',
+    },
   };
 };
