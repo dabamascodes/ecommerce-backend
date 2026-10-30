@@ -1,0 +1,94 @@
+[
+  {
+    "name": "Peter",
+    "lastName": "Parker",
+    "email": "spiderman@ecommerce.test",
+    "password": "Admin123!",
+    "phone": "+1 (718) 555-3824",
+    "roles": ["user", "admin", "super-user"],
+    "isActive": true,
+    "addresses": [
+      {
+        "street": "Ingram Street",
+        "exteriorNumber": "20",
+        "interiorNumber": "Apt 3B",
+        "neighborhood": "Forest Hills",
+        "city": "New York",
+        "state": "New York",
+        "zipCode": "11375",
+        "country": "USA",
+        "phone": "+1 (718) 555-3824",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "name": "Tony",
+    "lastName": "Stark",
+    "email": "ironman@ecommerce.test",
+    "password": "Admin123!",
+    "phone": "+1 (310) 555-8492",
+    "roles": ["user"],
+    "isActive": true,
+    "addresses": [
+      {
+        "street": "Wilshire Blvd",
+        "exteriorNumber": "10880",
+        "interiorNumber": "Penthouse",
+        "neighborhood": "Westwood",
+        "city": "Los Angeles",
+        "state": "California",
+        "zipCode": "90024",
+        "country": "USA",
+        "phone": "+1 (310) 555-8492",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "name": "Clark",
+    "lastName": "Kent",
+    "email": "superman@ecommerce.test",
+    "password": "User123!",
+    "phone": "+1 (618) 555-4910",
+    "roles": ["user"],
+    "isActive": true,
+    "addresses": [
+      {
+        "street": "Clinton Street",
+        "exteriorNumber": "344",
+        "interiorNumber": "Apt 4D",
+        "neighborhood": "Hollis",
+        "city": "Metropolis",
+        "state": "Illinois",
+        "zipCode": "62960",
+        "country": "USA",
+        "phone": "+1 (618) 555-4910",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "name": "Bruce",
+    "lastName": "Wayne",
+    "email": "batman@ecommerce.test",
+    "password": "Admin123!",
+    "phone": "+1 (201) 555-7361",
+    "roles": ["user", "admin"],
+    "isActive": true,
+    "addresses": [
+      {
+        "street": "Mountain Drive",
+        "exteriorNumber": "1007",
+        "interiorNumber": "Main Manor",
+        "neighborhood": "Bristol Township",
+        "city": "Gotham",
+        "state": "New Jersey",
+        "zipCode": "07001",
+        "country": "USA",
+        "phone": "+1 (201) 555-7361",
+        "isDefault": true
+      }
+    ]
+  }
+]
